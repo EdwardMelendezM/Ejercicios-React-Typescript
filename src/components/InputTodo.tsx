@@ -4,13 +4,14 @@ interface FormState {
   email: string;
   age: number;
 }
+const initialForm = {
+  name: "",
+  email: "",
+  age: 0,
+};
 
 export default function InputTodo() {
-  const [formData, setFormData] = useState<FormState>({
-    name: "",
-    email: "",
-    age: 0,
-  });
+  const [formData, setFormData] = useState<FormState>(initialForm);
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData((data) => ({
       ...data,
@@ -19,7 +20,10 @@ export default function InputTodo() {
   };
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    console.log(formData);
+    if (formData.name !== "" && formData.email !== "" && formData.age !== 0) {
+      console.log(formData);
+      setFormData(initialForm);
+    }
   };
   return (
     <form onSubmit={handleSubmit}>
