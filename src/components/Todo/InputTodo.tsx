@@ -56,7 +56,7 @@ export default function InputTodo({ data, onCreate }: Prop) {
         onChange={handleInputChange}
         placeholder="put age"
       />
-      <button>Enviar</button>
+      <button>Send</button>
     </form>
   );
 }

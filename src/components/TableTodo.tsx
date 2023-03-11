@@ -1,3 +1,4 @@
+import { Todo } from "../types";
 import TodoList from "./Todo/TodoList";
 
 interface Props {
@@ -7,8 +8,11 @@ interface Props {
     email: string;
     age: number;
   }>;
+  onChangeEdit: (newValue: Todo, id: string) => void;
+  deleteItem: (id: string) => void;
 }
-export default function TableTodo({ data }: Props) {
+
+export default function TableTodo({ data, onChangeEdit, deleteItem }: Props) {
   return (
     <table>
       <thead>
@@ -17,12 +21,19 @@ export default function TableTodo({ data }: Props) {
           <th>Name</th>
           <th>Email</th>
           <th>Age</th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         {data.length > 0 ? (
           data.map((elem) => (
-            <TodoList element={elem} key={crypto.randomUUID()} />
+            <TodoList
+              element={elem}
+              key={crypto.randomUUID()}
+              onChangeEdit={onChangeEdit}
+              deleteItem={deleteItem}
+            />
           ))
         ) : (
           <tr>
