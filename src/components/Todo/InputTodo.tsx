@@ -1,4 +1,5 @@
 import { useState, ChangeEvent } from "react";
+import { Todo } from "../../types";
 interface FormState {
   name: string | "";
   email: string;
@@ -9,19 +10,26 @@ const initialForm = {
   email: "",
   age: 0,
 };
-
-export default function InputTodo() {
+interface Prop {
+  data: Array<Todo>;
+  onCreate: (value: Array<Todo>) => void;
+}
+export default function InputTodo({ data, onCreate }: Prop) {
   const [formData, setFormData] = useState<FormState>(initialForm);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setFormData((data) => ({
       ...data,
       [e.target.name]: e.target.value,
     }));
   };
+
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (formData.name !== "" && formData.email !== "" && formData.age !== 0) {
-      console.log(formData);
+      const newData = { id: crypto.randomUUID(), ...formData };
+      const temp = [...data, newData];
+      onCreate(temp);
       setFormData(initialForm);
     }
   };
