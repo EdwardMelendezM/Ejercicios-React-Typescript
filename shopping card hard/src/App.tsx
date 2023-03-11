@@ -34,6 +34,14 @@ export default function App() {
       },
     });
   };
+  const handleClickRemoveOne = (id: string) => {
+    dispatch({
+      type: "remove_product",
+      payload: {
+        id_product: id,
+      },
+    });
+  };
   console.log(productState.products);
 
   return (
@@ -56,6 +64,7 @@ export default function App() {
             <div className="containerProducts_carrito_product_coste">
               ${elem.price}
             </div>
+            <button onClick={() => handleClickRemoveOne(elem.id)}>-</button>
           </div>
         ))}
       </div>
