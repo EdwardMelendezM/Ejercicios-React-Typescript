@@ -1,5 +1,7 @@
-import useProducts from "./components/useProducts";
+import useProducts, { Product } from "./components/useProducts";
 
+import "./App.css";
+import { MouseEvent } from "react";
 const products = [
   {
     id: "1",
@@ -24,14 +26,37 @@ const products = [
 ];
 export default function App() {
   const [productState, dispatch] = useProducts();
+  const handleClickAdd = (product: Product) => {
+    dispatch({
+      type: "add_product",
+      payload: {
+        newData: product,
+      },
+    });
+  };
   console.log(productState.products);
 
   return (
     <div className="container">
       <h3>Producs</h3>
-      <div>
+      <div className="containerProducts">
         {products.map((product) => (
-          <div>{product.name}</div>
+          <div key={product.id} className="containerProducts_product">
+            {product.name}
+            <button onClick={() => handleClickAdd(product)}>+</button>
+          </div>
+        ))}
+      </div>
+      <div className="containerProducts_carrito">
+        {productState.products.map((elem) => (
+          <div key={elem.id} className="containerProducts_carrito_product">
+            <div className="containerProducts_carrito_product_name">
+              {elem.name}
+            </div>
+            <div className="containerProducts_carrito_product_coste">
+              ${elem.price}
+            </div>
+          </div>
         ))}
       </div>
     </div>
