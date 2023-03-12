@@ -1,27 +1,30 @@
 import useProducts, { Product } from "./components/useProducts";
 
 import "./App.css";
-import { MouseEvent } from "react";
 const products = [
   {
     id: "1",
     name: "tv",
     price: 400,
+    count: 1,
   },
   {
     id: "2",
     name: "notice",
     price: 200,
+    count: 1,
   },
   {
     id: "3",
     name: "monitor",
     price: 600,
+    count: 1,
   },
   {
     id: "4",
     name: "pc",
     price: 1100,
+    count: 1,
   },
 ];
 export default function App() {
@@ -42,7 +45,6 @@ export default function App() {
       },
     });
   };
-  console.log(productState.products);
 
   return (
     <div className="container">
@@ -63,6 +65,9 @@ export default function App() {
             </div>
             <div className="containerProducts_carrito_product_coste">
               ${elem.price}
+            </div>
+            <div className="containerProducts_carrito_product_coste">
+              {elem?.count}
             </div>
             <button onClick={() => handleClickRemoveOne(elem.id)}>-</button>
           </div>

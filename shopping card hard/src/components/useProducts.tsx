@@ -4,7 +4,7 @@ export interface Product {
   id: string;
   name: string;
   price: number;
-  count?: number;
+  count: number;
 }
 
 interface ProductsState {
@@ -35,15 +35,32 @@ const INITIAL_STATE: ProductsState = {
 function productsReducer(state: ProductsState, action: ProductsAction) {
   switch (action.type) {
     case "add_product":
-      return {
-        ...state,
-        products: [...state.products, action.payload.newData],
-      };
-    case "remove_product":
-      const temp = state.products.filter(
-        (i) => i.id !== action.payload.id_product
+      const item = state.products.find(
+        (product) => product.id === action.payload.newData.id
       );
-      return { ...state, products: [...temp] };
+      if (item) {
+        item.count += 1;
+        return { ...state };
+      } else {
+        return {
+          ...state,
+          products: [...state.products, action.payload.newData],
+        };
+      }
+
+    case "remove_product":
+      const itemRemove = state.products.find(
+        (i) => i.id === action.payload.id_product
+      );
+      if (itemRemove && itemRemove.count > 1) {
+        itemRemove.count -= 1;
+        return { ...state };
+      } else {
+        const temp = state.products.filter(
+          (i) => i.id !== action.payload.id_product
+        );
+        return { ...state, products: [...temp] };
+      }
     case "clear":
       return { ...state, products: [] };
     default:
