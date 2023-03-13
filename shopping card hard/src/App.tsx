@@ -68,7 +68,11 @@ export default function App() {
       <div className="containerProducts">
         {data?.map((product) => (
           <div key={product.id} className="containerProducts_product">
-            <span>{product.title}</span>
+            <span>
+              {product.title.length > 35
+                ? product.title.substring(0, 35) + "..."
+                : product.title}
+            </span>
             <img
               src={product.image}
               alt="product"
@@ -85,10 +89,10 @@ export default function App() {
               {elem.title.substring(0, 10)}
             </div>
             <div className="containerProducts_carrito_product_coste">
-              ${elem.price}
+              Price:${elem.price}
             </div>
             <div className="containerProducts_carrito_product_coste">
-              {elem?.buy}
+              Count:{elem?.buy}
             </div>
             <button onClick={() => handleClickRemoveOne(elem.id)}>-</button>
           </div>
