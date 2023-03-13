@@ -2,6 +2,7 @@ import useProducts from "./components/useProducts";
 import "./App.css";
 import { ProductClothes, ProductResponseFromApi } from "./type";
 import { useEffect, useState } from "react";
+import axios from "axios";
 interface AppState {
   data: Array<ProductClothes>;
 }
@@ -31,10 +32,10 @@ export default function App() {
     });
   };
   useEffect(() => {
-    const fecthData = (): Promise<Array<ProductResponseFromApi>> => {
-      return fetch("https://fakestoreapi.com/products").then((res) =>
-        res.json()
-      );
+    const fecthData = (): Promise<ProductResponseFromApi> => {
+      return axios
+        .get("https://fakestoreapi.com/products")
+        .then((res) => res.data);
     };
     const mapFromApiToProducts = (
       apiResponse: Array<ProductResponseFromApi>
