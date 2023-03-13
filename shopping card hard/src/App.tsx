@@ -1,39 +1,19 @@
-import useProducts, { Product } from "./components/useProducts";
-
+import useProducts from "./components/useProducts";
 import "./App.css";
-const products = [
-  {
-    id: "1",
-    name: "tv",
-    price: 400,
-    count: 1,
-  },
-  {
-    id: "2",
-    name: "notice",
-    price: 200,
-    count: 1,
-  },
-  {
-    id: "3",
-    name: "monitor",
-    price: 600,
-    count: 1,
-  },
-  {
-    id: "4",
-    name: "pc",
-    price: 1100,
-    count: 1,
-  },
-];
+import { ProductClothes, ProductResponseFromApi } from "./type";
+import { useEffect, useState } from "react";
+interface AppState {
+  data: Array<ProductClothes>;
+}
+
 export default function App() {
+  const [data, setData] = useState<AppState["data"]>([]);
   const [productState, dispatch] = useProducts();
-  const handleClickAdd = (product: Product) => {
+  const handleClickAdd = (product: ProductClothes) => {
     dispatch({
       type: "add_product",
       payload: {
-        newData: product,
+        data: product,
       },
     });
   };
@@ -41,18 +21,59 @@ export default function App() {
     dispatch({
       type: "remove_product",
       payload: {
-        id_product: id,
+        id,
       },
     });
   };
+  const handleClickRemoveAll = () => {
+    dispatch({
+      type: "remove_all",
+    });
+  };
+  useEffect(() => {
+    const fecthData = (): Promise<Array<ProductResponseFromApi>> => {
+      return fetch("https://fakestoreapi.com/products").then((res) =>
+        res.json()
+      );
+    };
+    const mapFromApiToProducts = (
+      apiResponse: Array<ProductResponseFromApi>
+    ): Array<ProductClothes> => {
+      return apiResponse.map((productApi) => {
+        const { id, title, image, price, rating, description, category } =
+          productApi;
+        const { count, rate } = rating;
+        return {
+          id,
+          title,
+          image,
+          price,
+          rate,
+          count,
+          description,
+          category,
+        };
+      });
+    };
+    fecthData().then((newData) => {
+      console.log(newData);
 
+      const dataFetch = mapFromApiToProducts(newData);
+      setData(dataFetch);
+    });
+  }, []);
   return (
     <div className="container">
       <h3>Producs</h3>
       <div className="containerProducts">
-        {products.map((product) => (
+        {data?.map((product) => (
           <div key={product.id} className="containerProducts_product">
-            {product.name}
+            <span>{product.title}</span>
+            <img
+              src={product.image}
+              alt="product"
+              className="containerProducts_product_img"
+            />
             <button onClick={() => handleClickAdd(product)}>+</button>
           </div>
         ))}
@@ -61,17 +82,18 @@ export default function App() {
         {productState.products.map((elem) => (
           <div key={elem.id} className="containerProducts_carrito_product">
             <div className="containerProducts_carrito_product_name">
-              {elem.name}
+              {elem.title.substring(0, 10)}
             </div>
             <div className="containerProducts_carrito_product_coste">
               ${elem.price}
             </div>
             <div className="containerProducts_carrito_product_coste">
-              {elem?.count}
+              {elem?.buy}
             </div>
             <button onClick={() => handleClickRemoveOne(elem.id)}>-</button>
           </div>
         ))}
+        <button onClick={() => handleClickRemoveAll()}>Clear</button>
       </div>
     </div>
   );

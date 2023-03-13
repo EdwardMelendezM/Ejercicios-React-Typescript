@@ -1,21 +1,15 @@
 import { useReducer } from "react";
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  count: number;
-}
+import { ProductClothes } from "../type";
 
 interface ProductsState {
-  products: Product[];
+  products: ProductClothes[];
 }
 
 type ProductsAction =
   | {
       type: "add_product";
       payload: {
-        newData: Product;
+        data: ProductClothes;
       };
     }
   | {
@@ -24,8 +18,11 @@ type ProductsAction =
   | {
       type: "remove_product";
       payload: {
-        id_product: string;
+        id: string;
       };
+    }
+  | {
+      type: "remove_all";
     };
 
 const INITIAL_STATE: ProductsState = {
@@ -36,32 +33,36 @@ function productsReducer(state: ProductsState, action: ProductsAction) {
   switch (action.type) {
     case "add_product":
       const item = state.products.find(
-        (product) => product.id === action.payload.newData.id
+        (product) => product.id === action.payload.data.id
       );
       if (item) {
-        item.count += 1;
+        if (item.buy) {
+          item.buy += 1;
+        }
         return { ...state };
       } else {
+        const temps = { ...action.payload.data };
+        temps.buy = 1;
         return {
           ...state,
-          products: [...state.products, action.payload.newData],
+          products: [...state.products, temps],
         };
       }
-
     case "remove_product":
-      const itemRemove = state.products.find(
-        (i) => i.id === action.payload.id_product
-      );
-      if (itemRemove && itemRemove.count > 1) {
-        itemRemove.count -= 1;
+      const itemRemove = state.products.find((i) => i.id === action.payload.id);
+      if (itemRemove && itemRemove.buy && itemRemove.buy > 1) {
+        console.log("Entro -1");
+
+        if (itemRemove.buy) itemRemove.buy -= 1;
         return { ...state };
       } else {
-        const temp = state.products.filter(
-          (i) => i.id !== action.payload.id_product
-        );
+        console.log("Entro 0");
+
+        const temp = state.products.filter((i) => i.id !== action.payload.id);
         return { ...state, products: [...temp] };
       }
-    case "clear":
+
+    case "remove_all":
       return { ...state, products: [] };
     default:
       return state;
