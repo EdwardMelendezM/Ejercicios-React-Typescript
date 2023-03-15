@@ -57,8 +57,6 @@ export default function App() {
       });
     };
     fecthData().then((newData) => {
-      console.log(newData);
-
       const dataFetch = mapFromApiToProducts(newData);
       setData(dataFetch);
     });
