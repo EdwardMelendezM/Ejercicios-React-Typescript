@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 interface Props {
   onFilterData: (data: string) => void;
@@ -7,8 +7,10 @@ export default function InputFilter({ onFilterData }: Props) {
   const [inputValue, setInputValue] = useState<string>("");
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
-    onFilterData(inputValue);
   };
+  useEffect(() => {
+    onFilterData(inputValue);
+  }, [inputValue]);
 
   return (
     <div className="inputFilterContainer">

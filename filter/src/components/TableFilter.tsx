@@ -5,9 +5,6 @@ interface Props {
   data: Array<Data>;
 }
 export default function TableFilter({ data }: Props) {
-  useEffect(() => {
-    console.log("Nueva data");
-  }, [data]);
   return (
     <div className="elementName">
       {data.map((el) => (
